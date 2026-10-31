@@ -71,7 +71,7 @@ export default function Home() {
         <section className="hero" id="inicio" aria-labelledby="hero-title">
           <div className="hero-image">
             <Image
-              src="/images/hero.webp"
+              src="/images/hero-v2.webp"
               alt="Residência moderna iluminada ao anoitecer, em composição ilustrativa de segurança"
               fill
               priority
@@ -146,9 +146,10 @@ export default function Home() {
             <Reveal className="about-visual">
               <div className="image-frame">
                 <Image
-                  src="/images/equipment.webp"
+                  src="/images/equipment-v2.webp"
                   alt="Imagem conceitual de equipamento de segurança com iluminação azul e dourada"
                   fill
+                  quality={90}
                   sizes="(max-width: 800px) 100vw, 45vw"
                 />
                 <div className="image-cross top-left" />
@@ -237,6 +238,7 @@ export default function Home() {
                             src={service.image}
                             alt={service.alt}
                             fill
+                            quality={90}
                             sizes="(max-width: 700px) 100vw, 33vw"
                           />
                           <span className="service-index">0{i + 1}</span>
@@ -272,9 +274,10 @@ export default function Home() {
         >
           <div className="space-panel">
             <Image
-              src="/images/residence.webp"
-              alt="Residência contemporânea com representação ilustrativa de conectividade"
+              src="/images/residence-v2.webp"
+              alt="Residência contemporânea iluminada ao entardecer — imagem conceitual"
               fill
+              quality={90}
               sizes="(max-width: 800px) 100vw, 50vw"
             />
             <div className="space-shade" />
@@ -298,9 +301,10 @@ export default function Home() {
           </div>
           <div className="space-panel business">
             <Image
-              src="/images/business.webp"
+              src="/images/business-v2.webp"
               alt="Detalhe arquitetônico de edifício comercial moderno ao anoitecer"
               fill
+              quality={90}
               sizes="(max-width: 800px) 100vw, 50vw"
             />
             <div className="space-shade" />

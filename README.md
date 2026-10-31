@@ -40,13 +40,13 @@ O formulário valida os campos e abre uma mensagem codificada no WhatsApp `55169
 
 ## Imagens e marca
 
-As imagens derivam das capturas fornecidas pelo solicitante em 31/10/2026, convertidas em WebP; a imagem empresarial é um recorte arquitetônico da referência principal. São imagens conceituais, não fotos de instalações ou projetos executados pela ORSEGUPS. Não foi fornecida licença documental: confirmar autorização de uso em produção ou substituir por material licenciado. A captura que contém o crédito `kochy.ge` não foi incorporada.
+As cinco imagens foram geradas para esta prévia em 31/10/2026, com direção visual de arquitetura ao entardecer, equipamentos e monitoramento em azul e iluminação quente. Elas substituem as capturas iniciais e o recorte ampliado do edifício comercial. São imagens conceituais geradas por IA, não fotos de instalações, equipamentos específicos ou projetos executados pela ORSEGUPS. Os arquivos WebP preservam as dimensões originais, com qualidade 95; a entrega pelo Next.js usa qualidade 90. Os nomes `*-v2.webp` evitam reutilizar as versões anteriores em cache. Não há dependência de banco de imagens externo. A seleção visual deve ser aprovada pelo cliente antes da publicação definitiva.
 
 Nenhum logotipo oficial foi fornecido. O cabeçalho utiliza o nome em texto, sem apresentá-lo como logo oficial. Para inserir a marca original, adicione o arquivo em `public/` e defina `company.logo`. O ícone do navegador é apenas a inicial tipográfica “O”.
 
 ## Antes de publicar
 
-- Obter a logo oficial e confirmar os direitos de uso das imagens.
+- Obter a logo oficial e aprovar as imagens conceituais com o cliente.
 - Confirmar região de atendimento e serviços opcionais. Não foram inventados endereço, CNPJ, certificações, clientes ou avaliações.
 - Revisar a política de privacidade conforme responsável, hospedagem e práticas reais de atendimento.
 - Definir `NEXT_PUBLIC_SITE_URL` com o domínio HTTPS aprovado para metadados sociais e URL canônica. Sem domínio, os metadados de imagem da prévia usam a base local do Next.js.

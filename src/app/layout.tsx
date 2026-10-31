@@ -18,9 +18,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/hero.webp",
-        width: 1448,
-        height: 813,
+        url: "/images/hero-v2.webp",
+        width: 1672,
+        height: 941,
         alt: "Residência moderna ao anoitecer — imagem ilustrativa",
       },
     ],
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "ORSEGUPS — Segurança Inteligente",
     description: "Tecnologia e proteção para o que realmente importa.",
-    images: ["/images/hero.webp"],
+    images: ["/images/hero-v2.webp"],
   },
   robots: {
     index: process.env.SITE_INDEXABLE === "true",

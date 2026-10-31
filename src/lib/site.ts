@@ -28,7 +28,7 @@ export const services = [
     label: "PREVENÇÃO INTELIGENTE",
     description:
       "Proteção começa antes. Conheça soluções de alarme pensadas para as necessidades do seu espaço.",
-    image: "/images/equipment.webp",
+    image: "/images/equipment-v2.webp",
     alt: "Detalhe ilustrativo de equipamento de segurança",
     icon: "alarm",
     confirmed: true,
@@ -39,7 +39,7 @@ export const services = [
     label: "ATENÇÃO AO QUE IMPORTA",
     description:
       "Tecnologia e atenção conectadas para acompanhar a segurança do que é importante para você.",
-    image: "/images/monitoring.webp",
+    image: "/images/monitoring-v2.webp",
     alt: "Representação ilustrativa de uma central de monitoramento",
     icon: "monitor",
     confirmed: true,
@@ -50,8 +50,8 @@ export const services = [
     label: "TRANQUILIDADE TODOS OS DIAS",
     description:
       "Segurança que faz parte da sua rotina, com monitoramento 24 horas conforme os serviços contratados.",
-    image: "/images/residence.webp",
-    alt: "Representação de residência com recursos visuais de segurança",
+    image: "/images/residence-v2.webp",
+    alt: "Residência moderna com iluminação arquitetônica — imagem conceitual",
     icon: "shield",
     confirmed: true,
   },
