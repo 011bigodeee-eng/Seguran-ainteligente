@@ -140,3 +140,49 @@ test("privacidade acessível com retorno ao site", async ({ page }) => {
     "SEGURANÇA",
   );
 });
+
+test("camadas revelam no hover e foco; scroll move a faixa diagonal; movimento reduzido fica estático", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto("/");
+  const card = page.locator(".service-card").first();
+  await card.scrollIntoViewIfNeeded();
+  await expect(card.locator(".image-reveal-layer")).toHaveCSS(
+    "clip-path",
+    "polygon(100% 0px, 100% 0px, 100% 100%, 100% 100%)",
+  );
+  await card.hover();
+  await expect(card.locator(".image-reveal-layer")).toHaveCSS(
+    "clip-path",
+    "polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%)",
+  );
+  await expect(card).toHaveCSS("--pointer-x", /px$/);
+  await page.mouse.move(0, 0);
+  await card.getByRole("link", { name: "Saiba mais" }).focus();
+  await expect(card.locator(".image-reveal-layer")).toHaveCSS(
+    "clip-path",
+    "polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%)",
+  );
+  await page.locator(".diagonal-ribbon").scrollIntoViewIfNeeded();
+  const band = page.locator(".ribbon-track");
+  const before = await band.evaluate((el) => getComputedStyle(el).transform);
+  await page.evaluate(() => window.scrollBy({ top: 180, behavior: "instant" }));
+  await expect
+    .poll(() => band.evaluate((el) => getComputedStyle(el).transform))
+    .not.toBe(before);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await expect(page.locator(".page-scroll-progress")).toBeVisible();
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await expect(page.locator(".page-scroll-progress")).toBeHidden();
+  await expect(page.locator(".hero .scroll-image-layer")).toHaveCSS(
+    "transform",
+    "none",
+  );
+  await expect(page.locator(".ribbon-track")).toHaveCSS("transform", "none");
+});

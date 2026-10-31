@@ -1,6 +1,13 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useSpring } from "motion/react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "motion/react";
+import Image from "next/image";
 import {
   ArrowUpRight,
   Menu,
@@ -23,17 +30,27 @@ export function Reveal({
   children,
   className = "",
   delay = 0,
+  direction = "up",
 }: {
   children: React.ReactNode;
   className?: string;
   delay?: number;
+  direction?: "up" | "left" | "right";
 }) {
   const reduced = useReducedMotion();
   return (
     <motion.div
       className={className}
-      initial={reduced ? false : { opacity: 0, y: 22 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={
+        reduced
+          ? false
+          : {
+              opacity: 0,
+              y: 28,
+              x: direction === "left" ? -24 : direction === "right" ? 24 : 0,
+            }
+      }
+      whileInView={{ opacity: 1, y: 0, x: 0 }}
       viewport={{ once: true, margin: "-35px" }}
       transition={{ duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] }}
     >
@@ -41,6 +58,121 @@ export function Reveal({
     </motion.div>
   );
 }
+
+/** Scroll remains native: only decorative layers move diagonally. */
+export function ScrollImage({
+  src,
+  alt,
+  sizes,
+  priority = false,
+  direction = 1,
+}: {
+  src: string;
+  alt: string;
+  sizes: string;
+  priority?: boolean;
+  direction?: 1 | -1;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const progress = useSpring(scrollYProgress, { stiffness: 75, damping: 28 });
+  const x = useTransform(progress, [0, 1], [-16 * direction, 16 * direction]);
+  const y = useTransform(progress, [0, 1], [22, -22]);
+  return (
+    <div ref={ref} className="scroll-image">
+      <motion.div
+        className="scroll-image-layer"
+        style={reduced ? undefined : { x, y, scale: 1.1 }}
+      >
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes={sizes}
+          priority={priority}
+          quality={90}
+        />
+      </motion.div>
+    </div>
+  );
+}
+export function InteractiveSurface({
+  children,
+  className = "",
+  article = false,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  article?: boolean;
+}) {
+  const Tag = article ? "article" : "div";
+  return (
+    <Tag
+      className={`interactive-surface ${className}`}
+      onPointerMove={(event) => {
+        if (
+          event.pointerType !== "mouse" ||
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        )
+          return;
+        const rect = event.currentTarget.getBoundingClientRect();
+        event.currentTarget.style.setProperty(
+          "--pointer-x",
+          `${event.clientX - rect.left}px`,
+        );
+        event.currentTarget.style.setProperty(
+          "--pointer-y",
+          `${event.clientY - rect.top}px`,
+        );
+      }}
+    >
+      {children}
+    </Tag>
+  );
+}
+export function ScrollAtmosphere() {
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  return reduced ? null : (
+    <motion.div
+      className="page-scroll-progress"
+      style={{ scaleX: progress }}
+      aria-hidden="true"
+    />
+  );
+}
+export function DiagonalRibbon() {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const progress = useSpring(scrollYProgress, { stiffness: 65, damping: 28 });
+  const x = useTransform(progress, [0, 1], [65, -65]);
+  const y = useTransform(progress, [0, 1], [15, -15]);
+  return (
+    <div ref={ref} className="diagonal-ribbon" aria-hidden="true">
+      <div className="ribbon-outline" />
+      <motion.div
+        className="ribbon-track"
+        style={reduced ? undefined : { x, y }}
+      >
+        <span>
+          PROTEGER <i>+</i> CONECTAR <i>+</i> CUIDAR <i>+</i> PROTEGER <i>+</i>{" "}
+          CONECTAR <i>+</i> CUIDAR <i>+</i> PROTEGER <i>+</i> CONECTAR <i>+</i>{" "}
+          CUIDAR
+        </span>
+      </motion.div>
+    </div>
+  );
+}
+
 export function Intro() {
   const [show, setShow] = useState(false);
   useEffect(() => {

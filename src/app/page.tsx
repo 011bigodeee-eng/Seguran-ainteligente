@@ -27,6 +27,10 @@ import {
   Intro,
   Reveal,
   TimelineProgress,
+  ScrollImage,
+  InteractiveSurface,
+  ScrollAtmosphere,
+  DiagonalRibbon,
 } from "@/components/experience";
 import {
   company,
@@ -67,16 +71,15 @@ export default function Home() {
       </a>
       <Intro />
       <Header />
+      <ScrollAtmosphere />
       <main id="conteudo">
         <section className="hero" id="inicio" aria-labelledby="hero-title">
           <div className="hero-image">
-            <Image
+            <ScrollImage
               src="/images/hero-v2.webp"
               alt="Residência moderna iluminada ao anoitecer, em composição ilustrativa de segurança"
-              fill
               priority
               sizes="100vw"
-              quality={90}
             />
           </div>
           <div className="hero-shade" />
@@ -143,13 +146,12 @@ export default function Home() {
         </div>
         <section className="section about" id="sobre">
           <div className="container about-grid">
-            <Reveal className="about-visual">
+            <Reveal className="about-visual" direction="left">
               <div className="image-frame">
-                <Image
+                <ScrollImage
                   src="/images/equipment-v2.webp"
                   alt="Imagem conceitual de equipamento de segurança com iluminação azul e dourada"
-                  fill
-                  quality={90}
+                  direction={-1}
                   sizes="(max-width: 800px) 100vw, 45vw"
                 />
                 <div className="image-cross top-left" />
@@ -164,7 +166,7 @@ export default function Home() {
                 </span>
               </div>
             </Reveal>
-            <Reveal className="about-copy">
+            <Reveal className="about-copy" direction="right">
               <span className="eyebrow">
                 <span /> SOBRE A ORSEGUPS
               </span>
@@ -232,7 +234,7 @@ export default function Home() {
                     icons[service.icon as keyof typeof icons] || ShieldCheck;
                   return (
                     <Reveal delay={i * 0.09} key={service.id}>
-                      <article className="service-card">
+                      <InteractiveSurface article className="service-card">
                         <div className="service-image">
                           <Image
                             src={service.image}
@@ -241,6 +243,13 @@ export default function Home() {
                             quality={90}
                             sizes="(max-width: 700px) 100vw, 33vw"
                           />
+                          <div
+                            className="image-reveal-layer"
+                            aria-hidden="true"
+                          >
+                            <ArrowUpRight size={28} />
+                            <span>PROTEÇÃO EM FOCO</span>
+                          </div>
                           <span className="service-index">0{i + 1}</span>
                           <div className="service-icon">
                             <Icon size={24} />
@@ -257,7 +266,7 @@ export default function Home() {
                             Saiba mais
                           </ContactLink>
                         </div>
-                      </article>
+                      </InteractiveSurface>
                     </Reveal>
                   );
                 })}
@@ -272,12 +281,10 @@ export default function Home() {
           className="spaces"
           aria-label="Segurança para sua vida e seu negócio"
         >
-          <div className="space-panel">
-            <Image
+          <InteractiveSurface className="space-panel">
+            <ScrollImage
               src="/images/residence-v2.webp"
               alt="Residência contemporânea iluminada ao entardecer — imagem conceitual"
-              fill
-              quality={90}
               sizes="(max-width: 800px) 100vw, 50vw"
             />
             <div className="space-shade" />
@@ -298,13 +305,12 @@ export default function Home() {
                 Quero proteger minha residência
               </ContactLink>
             </Reveal>
-          </div>
-          <div className="space-panel business">
-            <Image
+          </InteractiveSurface>
+          <InteractiveSurface className="space-panel business">
+            <ScrollImage
               src="/images/business-v2.webp"
+              direction={-1}
               alt="Detalhe arquitetônico de edifício comercial moderno ao anoitecer"
-              fill
-              quality={90}
               sizes="(max-width: 800px) 100vw, 50vw"
             />
             <div className="space-shade" />
@@ -325,8 +331,9 @@ export default function Home() {
                 Solicitar solução empresarial
               </ContactLink>
             </Reveal>
-          </div>
+          </InteractiveSurface>
         </section>
+        <DiagonalRibbon />
         <section className="section technology" id="tecnologia">
           <div className="container tech-grid">
             <Reveal>

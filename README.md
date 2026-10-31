@@ -53,4 +53,6 @@ Nenhum logotipo oficial foi fornecido. O cabeçalho utiliza o nome em texto, sem
 - Somente após aprovação, definir `SITE_INDEXABLE=true` para permitir indexação. A prévia vem com `noindex, nofollow`.
 - Validar o WhatsApp comercial e condições de atendimento com o cliente.
 
+Os efeitos incluem sobreposição luminosa que acompanha o mouse, revelação diagonal dos cards por hover ou foco de teclado, entradas laterais ao rolar, parallax diagonal nas fotografias, faixa tipográfica inclinada e indicador de progresso. A rolagem permanece nativa, sem interceptar a roda do mouse ou os gestos de toque; em telas de toque, todo o conteúdo e os CTAs continuam acessíveis sem hover. Movimento reduzido desativa parallax, deslocamento da faixa e indicador animado.
+
 O Hero utiliza imagem estática de alta qualidade, sem vídeo externo ou autoplay. Todas as animações respeitam `prefers-reduced-motion`. Não há analytics, rastreamento publicitário ou painel de monitoramento real.

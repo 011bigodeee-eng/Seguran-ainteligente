@@ -2451,3 +2451,203 @@ h2 {
     display: block;
   }
 }
+
+/* Layered surfaces and native-scroll choreography. */
+.section {
+  overflow: clip;
+}
+.scroll-image {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.scroll-image-layer {
+  position: absolute;
+  inset: -24px;
+}
+.scroll-image-layer img {
+  object-fit: cover;
+}
+.hero-image .scroll-image-layer img {
+  animation: none;
+}
+.space-panel > .scroll-image {
+  z-index: -2;
+}
+.space-panel .scroll-image-layer img {
+  object-position: center;
+}
+.business .scroll-image-layer img {
+  object-position: left center;
+}
+.page-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--yellow);
+  box-shadow: 0 0 14px #f5cf1940;
+  transform-origin: left;
+  z-index: 65;
+  pointer-events: none;
+}
+.interactive-surface {
+  position: relative;
+  isolation: isolate;
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+}
+.interactive-surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    340px circle at var(--pointer-x) var(--pointer-y),
+    #f5cf191a,
+    transparent 75%
+  );
+  transition: opacity 0.45s ease;
+}
+.interactive-surface:focus-within::before {
+  opacity: 1;
+}
+.service-body,
+.space-content {
+  position: relative;
+  z-index: 4;
+}
+.image-reveal-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  flex-direction: column;
+  gap: 12px;
+  padding: 27px;
+  color: var(--yellow);
+  background: linear-gradient(135deg, #071a3600 15%, #071a36b3 80%);
+  clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+  transition: clip-path 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.image-reveal-layer span {
+  font-size: 7px;
+  letter-spacing: 1.8px;
+  font-weight: 800;
+}
+.service-image .service-icon,
+.service-image .service-index {
+  z-index: 3;
+}
+.service-card:focus-within {
+  border-color: var(--yellow);
+  box-shadow: 0 14px 36px #0002;
+}
+.service-card:focus-within .image-reveal-layer {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+.space-content h2 em {
+  background-image: linear-gradient(var(--yellow), var(--yellow));
+  background-position: left bottom;
+  background-size: 0 1px;
+  background-repeat: no-repeat;
+  transition: background-size 0.6s ease;
+}
+.space-panel:focus-within .space-content h2 em {
+  background-size: 100% 1px;
+}
+.diagonal-ribbon {
+  position: relative;
+  height: 210px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #071a36;
+  display: flex;
+  align-items: center;
+}
+.ribbon-track {
+  position: relative;
+  left: -180px;
+  flex-shrink: 0;
+  width: calc(100% + 360px);
+  rotate: -4deg;
+  padding: 16px 0;
+  background: var(--yellow);
+  color: var(--navy);
+  box-shadow: 0 10px 40px #0003;
+}
+.ribbon-track > span {
+  display: block;
+  white-space: nowrap;
+  font-size: clamp(25px, 3.5vw, 51px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1.2;
+}
+.ribbon-track i {
+  display: inline-block;
+  font-style: normal;
+  font-weight: 400;
+  margin: 0 33px;
+}
+.ribbon-outline {
+  position: absolute;
+  left: -10%;
+  top: calc(50% - 33px);
+  width: 120%;
+  height: 75px;
+  border-top: 1px solid #f5cf1940;
+  border-bottom: 1px solid #f5cf1940;
+  rotate: 4deg;
+  z-index: -1;
+}
+@media (hover: hover) and (pointer: fine) {
+  .interactive-surface:hover::before {
+    opacity: 1;
+  }
+  .service-card:hover .image-reveal-layer {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  .space-panel:hover .space-content h2 em {
+    background-size: 100% 1px;
+  }
+  .space-panel:hover .scroll-image-layer img {
+    filter: saturate(1.12);
+  }
+}
+@media (max-width: 800px) {
+  .diagonal-ribbon {
+    height: 155px;
+  }
+  .ribbon-track {
+    padding: 15px 0;
+  }
+  .ribbon-track i {
+    margin: 0 20px;
+  }
+  .ribbon-outline {
+    height: 60px;
+    top: calc(50% - 30px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-image-layer {
+    inset: 0;
+    transform: none !important;
+  }
+  .page-scroll-progress {
+    display: none;
+  }
+  .image-reveal-layer {
+    transition: none;
+  }
+  .ribbon-track {
+    transform: none !important;
+  }
+}
