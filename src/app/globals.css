@@ -261,67 +261,522 @@ h2 {
 .mobile-nav {
   display: none;
 }
+/* The pre-paint script enables this server-rendered cover synchronously. */
 .intro {
+  display: none;
+}
+html[data-intro="play"] .intro {
   position: fixed;
   inset: 0;
   z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #030d1f;
+  color: var(--white);
+  overflow: hidden;
+  isolation: isolate;
+  animation: introCurtain 2.5s cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+html[data-intro="play"] {
+  overflow: hidden;
+}
+html[data-intro="play"] .site-shell {
+  visibility: hidden;
+  animation: introPageReady 1ms steps(1, end) 1.95s forwards;
+}
+.intro-photo,
+.intro-vignette,
+.intro-grid {
+  position: absolute;
+  inset: 0;
   pointer-events: none;
+}
+.intro-photo {
+  z-index: -4;
+  animation: introCamera 2.5s ease-out both;
+}
+.intro-photo img {
+  object-fit: cover;
+  object-position: 65% center;
+}
+.intro-vignette {
+  z-index: -3;
+  background:
+    radial-gradient(ellipse at 50% 45%, #071a3666, #030d1ff2 85%),
+    linear-gradient(90deg, #030d1fee, #071a36aa);
+}
+.intro-grid {
+  z-index: -2;
+  background-image:
+    linear-gradient(#91bbec0b 1px, transparent 1px),
+    linear-gradient(90deg, #91bbec0b 1px, transparent 1px);
+  background-size: 70px 70px;
+  mask-image: radial-gradient(ellipse, #000, transparent 75%);
+}
+.intro-beam {
+  position: absolute;
+  inset: -40%;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 42%,
+    #f5cf1900 47%,
+    #f5cf1938 49.9%,
+    #f5cf1970 50%,
+    #f5cf1900 50.2%,
+    transparent 58%
+  );
+  animation: introBeam 2.2s ease-in-out both;
+}
+.intro-topline {
+  position: absolute;
+  top: max(30px, env(safe-area-inset-top));
+  left: 42px;
+  right: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+}
+.intro-topline > span {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #c0cee0;
+}
+.intro-topline i {
+  display: block;
+  width: 25px;
+  height: 1px;
+  background: var(--yellow);
+}
+.intro-skip {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 10px;
+  padding: 11px 15px;
+  border: 1px solid #b0c7e333;
+  background: #071a3680;
+  color: #e8eef7;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+.intro-skip:hover {
+  border-color: var(--yellow);
+  background: #0a2548;
+}
+.intro-composition {
+  position: relative;
+  width: min(1000px, calc(100% - 50px));
+  height: 440px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.intro-emblem {
+  position: absolute;
+  top: 0;
+  left: calc(50% - 45px);
+  width: 90px;
+  height: 90px;
   display: grid;
   place-items: center;
-  background: var(--navy);
-  animation: introExit 1.95s ease forwards;
+  color: var(--yellow);
+  animation: introEmblem 2.5s ease both;
 }
-.intro-brand {
-  animation: introBrand 1.8s ease both;
-  position: relative;
+.intro-emblem > svg {
+  filter: drop-shadow(0 0 20px #f5cf1940);
 }
-.intro .brand-name {
-  font-size: 54px;
+.intro-orbit {
+  position: absolute;
+  inset: 0;
+  border: 1px solid #f5cf194d;
+  border-radius: 50%;
+  border-top-color: var(--yellow);
+  animation: introOrbit 2.5s ease-out both;
 }
-.intro .brand-tagline {
-  font-size: 12px;
-  letter-spacing: 6px;
+.intro-orbit-two {
+  inset: -10px;
+  border-style: dashed;
+  border-color: #7ab6ff33;
+  animation-direction: reverse;
 }
-.intro-line {
-  height: 1px;
+.intro-act {
+  position: absolute;
+  top: 120px;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+.intro-eyebrow {
   display: block;
-  background: var(--yellow);
-  margin-top: 25px;
-  box-shadow: 0 0 25px #f5cf1999;
-  animation: introLine 1.3s ease forwards;
-  transform-origin: left;
+  font-size: 8px;
+  letter-spacing: 3px;
+  font-weight: 700;
+  color: #a4bbd6;
+  margin-bottom: 22px;
 }
-@keyframes introExit {
+.intro-services {
+  animation: introServices 2.5s ease both;
+}
+.intro-service-words {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 6px;
+}
+.intro-service-words > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  overflow: hidden;
+}
+.intro-service-words b {
+  display: block;
+  font-size: clamp(30px, 5.1vw, 74px);
+  font-weight: 800;
+  letter-spacing: -2.8px;
+  line-height: 1.1;
+  animation: introWord 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.intro-service-words > span:nth-child(2) b {
+  animation-delay: 0.16s;
+}
+.intro-service-words > span:nth-child(3) b {
+  animation-delay: 0.32s;
+}
+.intro-service-words svg {
+  width: 22px;
+  height: 22px;
+  color: var(--yellow);
+  stroke-width: 1.2;
+  animation: introWord 0.7s ease 0.3s both;
+}
+.intro-service-words > span:nth-child(2) {
+  color: #c3d6f0;
+}
+.intro-identity {
+  top: 153px;
+  animation: introIdentity 2.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.intro-identity .brand {
+  gap: 17px;
+}
+.intro-identity .brand-name {
+  font-size: clamp(50px, 8vw, 105px);
+  letter-spacing: -6px;
+}
+.intro-identity .brand-tagline {
+  font-size: 11px;
+  letter-spacing: 8px;
+}
+.intro-identity > p {
+  font-size: 13px;
+  color: #becde0;
+  margin-top: 28px;
+  letter-spacing: 0.8px;
+}
+.intro-bottom {
+  position: absolute;
+  left: 42px;
+  right: 42px;
+  bottom: max(30px, env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 19px;
+  color: #9aafc9;
+  font-size: 7px;
+  letter-spacing: 1.6px;
+}
+.intro-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #9db5d529;
+}
+.intro-progress > span {
+  display: block;
+  height: 100%;
+  background: var(--yellow);
+  box-shadow: 0 0 18px #f5cf1966;
+  transform-origin: left;
+  animation: introProgress 2s cubic-bezier(0.25, 0.6, 0.35, 1) both;
+}
+.intro-corner {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  border-color: #f5cf1970;
+  pointer-events: none;
+}
+.intro-corner-one {
+  top: 115px;
+  left: 42px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.intro-corner-two {
+  bottom: 115px;
+  right: 42px;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+}
+@keyframes introCurtain {
   0%,
-  65% {
-    opacity: 1;
+  80% {
+    clip-path: inset(0 0 0 0);
+    visibility: visible;
   }
   100% {
-    opacity: 0;
+    clip-path: inset(0 0 100% 0);
     visibility: hidden;
   }
 }
-@keyframes introBrand {
+@keyframes introPageReady {
+  to {
+    visibility: visible;
+  }
+}
+@keyframes introCamera {
+  from {
+    transform: scale(1.16) translateX(-1%);
+    opacity: 0.35;
+  }
+  to {
+    transform: scale(1.02);
+    opacity: 0.8;
+  }
+}
+@keyframes introBeam {
+  0% {
+    transform: translateX(-60%);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(60%);
+    opacity: 0;
+  }
+}
+@keyframes introEmblem {
   0% {
     opacity: 0;
-    transform: translateY(12px);
+    transform: scale(0.7);
   }
-  35%,
-  75% {
+  22%,
+  85% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+}
+@keyframes introOrbit {
+  from {
+    transform: rotate(-100deg) scale(0.8);
+  }
+  to {
+    transform: rotate(30deg) scale(1);
+  }
+}
+@keyframes introWord {
+  from {
+    transform: translateY(110%) skewY(5deg);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) skewY(0);
+    opacity: 1;
+  }
+}
+@keyframes introServices {
+  0%,
+  47% {
     opacity: 1;
     transform: translateY(0);
   }
+  59%,
   100% {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-25px);
+    visibility: hidden;
   }
 }
-@keyframes introLine {
-  0% {
+@keyframes introIdentity {
+  0%,
+  48% {
+    opacity: 0;
+    transform: translateY(25px) scale(0.97);
+    visibility: hidden;
+  }
+  64%,
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    visibility: visible;
+  }
+}
+@keyframes introProgress {
+  from {
     transform: scaleX(0);
   }
-  100% {
+  to {
     transform: scaleX(1);
+  }
+}
+@media (max-width: 600px) {
+  .intro-topline {
+    top: max(20px, env(safe-area-inset-top));
+    left: 20px;
+    right: 20px;
+  }
+  .intro-topline > span {
+    font-size: 7px;
+    letter-spacing: 1.5px;
+  }
+  .intro-topline > span i {
+    display: none;
+  }
+  .intro-topline > span {
+    max-width: 120px;
+    flex-wrap: wrap;
+    gap: 3px;
+  }
+  .intro-skip {
+    font-size: 9px;
+    padding: 9px 11px;
+    gap: 9px;
+  }
+  .intro-composition {
+    height: 330px;
+    width: calc(100% - 32px);
+  }
+  .intro-emblem {
+    top: 0;
+    width: 68px;
+    height: 68px;
+    left: calc(50% - 34px);
+  }
+  .intro-emblem > svg {
+    width: 35px;
+    height: 35px;
+  }
+  .intro-act {
+    top: 110px;
+  }
+  .intro-eyebrow {
+    font-size: 6px;
+    letter-spacing: 1.5px;
+    margin-bottom: 22px;
+  }
+  .intro-service-words {
+    gap: 12px;
+  }
+  .intro-service-words b {
+    font-size: clamp(25px, 7.7vw, 44px);
+    letter-spacing: -1.3px;
+  }
+  .intro-service-words > span {
+    gap: 10px;
+  }
+  .intro-service-words svg {
+    width: 16px;
+    height: 16px;
+  }
+  .intro-identity {
+    top: 127px;
+  }
+  .intro-identity .brand {
+    gap: 13px;
+  }
+  .intro-identity .brand-name {
+    font-size: clamp(46px, 13vw, 74px);
+    letter-spacing: -3px;
+  }
+  .intro-identity .brand-tagline {
+    font-size: 7px;
+    letter-spacing: 4px;
+  }
+  .intro-identity > p {
+    font-size: 10px;
+    margin-top: 24px;
+  }
+  .intro-bottom {
+    left: 20px;
+    right: 20px;
+    bottom: max(25px, env(safe-area-inset-bottom));
+    font-size: 6px;
+    letter-spacing: 1.2px;
+  }
+  .intro-bottom > span:last-of-type {
+    display: none;
+  }
+  .intro-corner {
+    width: 22px;
+    height: 22px;
+  }
+  .intro-corner-one {
+    top: 105px;
+    left: 20px;
+  }
+  .intro-corner-two {
+    bottom: 105px;
+    right: 20px;
+  }
+}
+@media (max-height: 540px) and (min-width: 601px) {
+  .intro-composition {
+    height: 280px;
+  }
+  .intro-emblem {
+    width: 50px;
+    height: 50px;
+    left: calc(50% - 25px);
+  }
+  .intro-emblem > svg {
+    width: 30px;
+  }
+  .intro-act {
+    top: 80px;
+  }
+  .intro-service-words b {
+    font-size: 35px;
+  }
+  .intro-eyebrow {
+    margin-bottom: 10px;
+  }
+  .intro-identity .brand-name {
+    font-size: 60px;
+  }
+  .intro-identity > p {
+    margin-top: 15px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-intro="play"] .intro {
+    display: none;
+  }
+  html[data-intro="play"] {
+    overflow: auto;
+  }
+  html[data-intro="play"] .site-shell {
+    visibility: visible;
+    animation: none;
   }
 }
 .hero {

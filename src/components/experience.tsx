@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   motion,
   useReducedMotion,
@@ -15,8 +15,12 @@ import {
   Check,
   MessageCircle,
   ChevronDown,
+  BellRing,
+  Monitor,
+  ShieldCheck,
 } from "lucide-react";
 import { Brand } from "./brand";
+import { INTRO_DURATION } from "@/lib/intro";
 import {
   company,
   navigation,
@@ -174,27 +178,140 @@ export function DiagonalRibbon() {
 }
 
 export function Intro() {
-  const [show, setShow] = useState(false);
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    try {
-      if (sessionStorage.getItem("orsegups-intro")) return;
-      sessionStorage.setItem("orsegups-intro", "seen");
-    } catch {
-      /* Storage is optional. */
-    }
-    setShow(true);
-    const timer = setTimeout(() => setShow(false), 1950);
-    return () => clearTimeout(timer);
+  // The server renders the cover. The synchronous head script decides whether
+  // to show it before first paint, rather than mounting it after useEffect.
+  const [show, setShow] = useState(true);
+  const ref = useRef<HTMLDivElement>(null);
+  const finish = useCallback(() => {
+    const restoreFocus = ref.current?.contains(document.activeElement);
+    document.documentElement.dataset.intro = "done";
+    document
+      .querySelector<HTMLElement>(".site-shell")
+      ?.removeAttribute("inert");
+    setShow(false);
+    if (restoreFocus)
+      document.getElementById("hero-title")?.focus({ preventScroll: true });
   }, []);
-  return show ? (
-    <div className="intro" aria-hidden="true">
-      <div className="intro-brand">
-        <Brand />
-        <span className="intro-line" />
+  useEffect(() => {
+    if (document.documentElement.dataset.intro !== "play") {
+      setShow(false);
+      return;
+    }
+    const shell = document.querySelector<HTMLElement>(".site-shell");
+    shell?.setAttribute("inert", "");
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (media.matches) {
+      finish();
+      return;
+    }
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") finish();
+    };
+    const onPreference = () => {
+      if (media.matches) finish();
+    };
+    // CSS starts with the first paint; hydration must not restart its clock.
+    const animation = ref.current
+      ?.getAnimations()
+      .find(
+        (item) =>
+          item instanceof CSSAnimation && item.animationName === "introCurtain",
+      );
+    const elapsed = Number(animation?.currentTime || 0);
+    const timer = window.setTimeout(
+      finish,
+      Math.max(0, INTRO_DURATION - elapsed),
+    );
+    window.addEventListener("keydown", onKey);
+    media.addEventListener("change", onPreference);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("keydown", onKey);
+      media.removeEventListener("change", onPreference);
+      shell?.removeAttribute("inert");
+    };
+  }, [finish]);
+  if (!show) return null;
+  return (
+    <div
+      ref={ref}
+      className="intro"
+      role="dialog"
+      aria-modal="true"
+      aria-label="ORSEGUPS — Alarmes, monitoramento e proteção 24 horas"
+      onAnimationEnd={(event) => {
+        if (
+          event.target === event.currentTarget &&
+          event.animationName === "introCurtain"
+        )
+          finish();
+      }}
+    >
+      <div className="intro-photo" aria-hidden="true">
+        <Image
+          src="/images/hero-v2.webp"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          quality={90}
+        />
       </div>
+      <div className="intro-vignette" aria-hidden="true" />
+      <div className="intro-grid" aria-hidden="true" />
+      <div className="intro-beam" aria-hidden="true" />
+      <div className="intro-topline">
+        <span>
+          ORSEGUPS <i /> SEGURANÇA INTELIGENTE
+        </span>
+        <button type="button" className="intro-skip" onClick={finish}>
+          Pular abertura <ArrowUpRight size={15} />
+        </button>
+      </div>
+      <div className="intro-composition" aria-hidden="true">
+        <div className="intro-emblem">
+          <span className="intro-orbit" />
+          <span className="intro-orbit intro-orbit-two" />
+          <ShieldCheck size={47} strokeWidth={1} />
+        </div>
+        <div className="intro-act intro-services">
+          <span className="intro-eyebrow">
+            INTELIGÊNCIA PARA PROTEGER O QUE IMPORTA.
+          </span>
+          <div className="intro-service-words">
+            <span>
+              <b>ALARMES.</b>
+              <BellRing />
+            </span>
+            <span>
+              <b>MONITORAMENTO.</b>
+              <Monitor />
+            </span>
+            <span>
+              <b>
+                PROTEÇÃO <em>24 HORAS.</em>
+              </b>
+              <ShieldCheck />
+            </span>
+          </div>
+        </div>
+        <div className="intro-act intro-identity">
+          <span className="intro-eyebrow">A TRANQUILIDADE COMEÇA AQUI.</span>
+          <Brand />
+          <p>Sua segurança. Nossa prioridade.</p>
+        </div>
+      </div>
+      <div className="intro-bottom" aria-hidden="true">
+        <span>TECNOLOGIA. PROTEÇÃO. CONFIANÇA.</span>
+        <span>PARA O QUE REALMENTE IMPORTA.</span>
+        <div className="intro-progress">
+          <span />
+        </div>
+      </div>
+      <span className="intro-corner intro-corner-one" aria-hidden="true" />
+      <span className="intro-corner intro-corner-two" aria-hidden="true" />
     </div>
-  ) : null;
+  );
 }
 export function Header() {
   const [open, setOpen] = useState(false);

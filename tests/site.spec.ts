@@ -186,3 +186,71 @@ test("camadas revelam no hover e foco; scroll move a faixa diagonal; movimento r
   );
   await expect(page.locator(".ribbon-track")).toHaveCSS("transform", "none");
 });
+
+test("entrada já cobre o primeiro frame sem hidratação e libera a página sozinha", async ({
+  page,
+}) => {
+  // Simulate failed/late framework bundles: the cover must not depend on useEffect.
+  await page.route("**/_next/static/**/*.js", (route) => route.abort());
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("html")).toHaveAttribute("data-intro", "play");
+  await expect(page.locator(".intro")).toBeVisible();
+  await expect(page.locator(".site-shell")).toHaveCSS("visibility", "hidden");
+  expect(
+    await page.evaluate(
+      () =>
+        document
+          .elementFromPoint(innerWidth / 2, innerHeight / 2)
+          ?.closest(".intro") !== null,
+    ),
+  ).toBe(true);
+  await expect(page.locator(".intro")).toBeHidden({ timeout: 4000 });
+  await expect(page.locator(".site-shell")).toHaveCSS("visibility", "visible");
+  await expect(page.locator("html")).toHaveAttribute("data-intro", "done", {
+    timeout: 5000,
+  });
+  await expect(page.locator(".site-shell")).not.toHaveAttribute("inert", "");
+});
+
+test("entrada destaca serviços, pode ser pulada e não reaparece na mesma sessão", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const intro = page.getByRole("dialog", {
+    name: "ORSEGUPS — Alarmes, monitoramento e proteção 24 horas",
+  });
+  await expect(intro).toBeVisible();
+  await expect(intro.locator(".intro-service-words")).toContainText("ALARMES.");
+  await expect(intro.locator(".intro-service-words")).toContainText(
+    "MONITORAMENTO.",
+  );
+  await expect(intro.locator(".intro-service-words")).toContainText(
+    "24 HORAS.",
+  );
+  await intro.getByRole("button", { name: "Pular abertura" }).click();
+  await expect(intro).toHaveCount(0);
+  await expect(page.locator("#hero-title")).toBeFocused();
+  await expect(page.locator(".site-shell")).not.toHaveAttribute("inert", "");
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("data-intro", "skip");
+  await expect(page.locator(".intro")).toHaveCount(0);
+  await expect(page.locator("#hero-title")).toBeVisible();
+});
+
+test("entrada permite Escape, ignora links diretos e respeita movimento reduzido", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.locator(".intro")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".intro")).toHaveCount(0);
+  await page.evaluate(() => sessionStorage.clear());
+  await page.goto("/privacidade");
+  await page.goto("/#contato");
+  await expect(page.locator("html")).toHaveAttribute("data-intro", "skip");
+  await expect(page.locator(".intro")).toHaveCount(0);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await expect(page.locator(".intro")).toHaveCount(0);
+  await expect(page.locator(".site-shell")).toHaveCSS("visibility", "visible");
+});

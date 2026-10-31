@@ -36,7 +36,7 @@ Os testes E2E usam Chromium em `/usr/bin/chromium`. Em outra máquina, defina `C
 
 Somente os três serviços confirmados estão publicados. Os cinco serviços opcionais têm `confirmed: false`; revise textos, imagem, ícone e disponibilidade antes de ativá-los. Projetos e depoimentos só aparecem quando os respectivos arrays possuem conteúdo real autorizado.
 
-O formulário valida os campos e abre uma mensagem codificada no WhatsApp `5516993778455`. O visitante precisa confirmar o envio no WhatsApp. Há um link alternativo se a abertura da janela for bloqueada. Os dados do formulário não são persistidos pelo site. A única marcação em `sessionStorage` evita repetir a abertura animada durante a sessão.
+O formulário valida os campos e abre uma mensagem codificada no WhatsApp `5516993778455`. O visitante precisa confirmar o envio no WhatsApp. Há um link alternativo se a abertura da janela for bloqueada. Os dados do formulário não são persistidos pelo site. A única marcação em `sessionStorage` (`orsegups-intro-v2`) evita repetir a abertura animada durante a sessão. A abertura é renderizada no HTML e habilitada por um script síncrono no `<head>`, antes da primeira pintura, evitando o flash do site antes da animação. A sequência cinematográfica de 2,5 segundos destaca os três serviços confirmados, revela a identidade e abre uma cortina para o Hero. Pode ser pulada por botão ou Escape. Links diretos para seções, movimento reduzido e visitas repetidas dispensam a abertura. Sem JavaScript ela fica oculta; se os bundles falharem, a animação CSS libera o conteúdo e um temporizador independente restaura a navegação.
 
 ## Imagens e marca
 
